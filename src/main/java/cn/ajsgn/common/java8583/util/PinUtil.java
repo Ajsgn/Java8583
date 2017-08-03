@@ -1,4 +1,4 @@
-package cn.ajsgn.test.useless.util;
+package cn.ajsgn.common.java8583.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -18,7 +18,7 @@ public class PinUtil {
 	 * @param pin 明文pin值
 	 * @param pin cardNo 卡号信息  2域，35域原始数据（等号不做转换），36域原始数据均可（等号不做转换）
 	 * @return String pinBlock的字符串形式
-	 * @author g.yang@i-vpoints.com
+	 * @author Ajsgn@foxmail.com
 	 * @date 2017年4月10日 下午1:29:24
 	 */
 	public static final String pinBlockStr(String pin,String cardNo){
@@ -32,7 +32,7 @@ public class PinUtil {
 	 * @param pin 明文pin值
 	 * @param pin cardNo 卡号信息  2域，35域原始数据（等号不做转换），36域原始数据均可（等号不做转换）
 	 * @return byte[] pinBlock的byte[]形式
-	 * @author g.yang@i-vpoints.com
+	 * @author Ajsgn@foxmail.com
 	 * @date 2017年4月10日 下午1:27:38
 	 */
 	public static final byte[] pinBlockByte(String pin,String cardNo){
@@ -58,7 +58,7 @@ public class PinUtil {
 	 * @Description: ANSI X9.8 Format（不带主账号信息）
 	 * @param pin 明文pin码
 	 * @return String pinBlock的字符串形式
-	 * @author g.yang@i-vpoints.com
+	 * @author Ajsgn@foxmail.com
 	 * @date 2017年4月10日 下午1:27:01
 	 */
 	public static final String pinBlockStr(String pin){
@@ -71,7 +71,7 @@ public class PinUtil {
 	 * @Description: ANSI X9.8 Format（不带主账号信息）
 	 * @param pin 明文pin码
 	 * @return byte[] pinBlock
-	 * @author g.yang@i-vpoints.com
+	 * @author Ajsgn@foxmail.com
 	 * @date 2017年4月10日 下午1:06:53
 	 */
 	public static final byte[] pinBlockByte(String pin){
@@ -106,7 +106,7 @@ public class PinUtil {
 	 * @Description: 取主账号的pan值
 	 * @param cardNo 卡号信息（2域，二磁道，三磁道）均可
 	 * @return String pan的字符串表示形式
-	 * @author g.yang@i-vpoints.com
+	 * @author Ajsgn@foxmail.com
 	 * @date 2017年4月10日 下午1:08:49
 	 */
 	private static final String panStr(String cardNo){
@@ -127,7 +127,7 @@ public class PinUtil {
 	 * @Title: checkCardNo
 	 * @Description: 简单的检查卡号的有效性，不能为空，不能小于16位长度
 	 * @param cardNo 卡号信息
-	 * @author g.yang@i-vpoints.com
+	 * @author Ajsgn@foxmail.com
 	 * @date 2017年4月10日 下午1:12:47
 	 * @throws IllegalArgumentException 如果卡号信息不符合简单的判断要去
 	 */

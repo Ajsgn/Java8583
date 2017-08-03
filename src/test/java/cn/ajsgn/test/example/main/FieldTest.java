@@ -7,7 +7,7 @@ import cn.ajsgn.common.java8583.quickstart.SingletonBankFactory;
 public class FieldTest {
 	
 	public static void main(String[] args) {
-		Iso8583MessageFactory factory = SingletonBankFactory.getTestIso8583Factory();
+		Iso8583MessageFactory factory = SingletonBankFactory.forQuickStart();
 		
 		Iso8583Message message = new Iso8583Message(factory);
 		message.setTpdu("6022000000");

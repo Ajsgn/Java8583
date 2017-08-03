@@ -24,7 +24,7 @@ import cn.ajsgn.common.java8583.special.SpecialFieldHandler;
  * <p>用于解决签到62域BCD编码，其他请求，62域返回ASCII编码</p>
  * @ClassName: SpecialField62
  * @Description: 一个简单的62域特殊处理器
- * @author g.yang@i-vpoints.com
+ * @author Ajsgn@foxmail.com
  * @date 2017年7月25日 下午4:55:10
  */
 public class SpecialField62Handler implements SpecialFieldHandler{

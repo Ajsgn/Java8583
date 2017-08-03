@@ -208,7 +208,7 @@ public class Iso8583MessageFactory {
 	 * @Description: 将一个不包括消息长度的String格式的消息报文转换成为一个Iso8583Message对象
 	 * @param data 不包含消息长度的报文数据
 	 * @return Iso8583Message
-	 * @author g.yang@i-vpoints.com
+	 * @author Ajsgn@foxmail.com
 	 * @date 2017年7月25日 下午3:57:28
 	 */
 	public Iso8583Message parseWithoutMsgLength(String data){
@@ -292,7 +292,7 @@ public class Iso8583MessageFactory {
 	 * @param fieldType 当前正在解析的字段类型
 	 * @param mti 当前的消息类型
 	 * @return String 解析结果
-	 * @author g.yang@i-vpoints.com
+	 * @author Ajsgn@foxmail.com
 	 * @date 2017年7月25日 下午4:00:47
 	 */
 	private String parseWithMti(InputStream is,Iso8583FieldType fieldType,String mti) throws IOException{

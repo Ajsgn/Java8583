@@ -174,7 +174,7 @@ public class Iso8583Message {
 	 * @Title: toFormatString
 	 * @Description: 格式化消息输出
 	 * @return String 格式化输出
-	 * @author g.yang@i-vpoints.com
+	 * @author Ajsgn@foxmail.com
 	 * @date 2017年7月25日 下午3:08:44
 	 */
 	public String toFormatString(){
@@ -202,7 +202,7 @@ public class Iso8583Message {
 	 * @Title: toBytesString
 	 * @Description: 获取当前报文的字符串表现形式
 	 * @return String 当前报文的字符串表现形式
-	 * @author g.yang@i-vpoints.com
+	 * @author Ajsgn@foxmail.com
 	 * @date 2017年7月26日 上午9:07:55
 	 */
 	public String toBytesString(){

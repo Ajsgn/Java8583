@@ -17,27 +17,40 @@ package cn.ajsgn.common.java8583.quickstart;
 
 import cn.ajsgn.common.java8583.core.Iso8583MessageFactory;
 
+/**
+ * quick start
+ * @ClassName: SingletonBankFactory
+ * @Description: quick start
+ * @author Ajsgn@foxmail.com
+ * @date 2017年8月3日 下午4:31:17
+ */
 public class SingletonBankFactory {
-
+	
+	/**
+	 * 对象持有
+	 * @ClassName: SingletonHolder
+	 * @Description: 对象持有
+	 * @author Ajsgn@foxmail.com
+	 * @date 2017年8月3日 下午4:31:57
+	 */
 	private static class SingletonHolder {
-		private static final Iso8583MessageFactory CIB_ISO8583_FACTORY = BankFactory.getCIBIso8583Factory();
-		private static final Iso8583MessageFactory GDB_ISO8583_FACTORY = BankFactory.getGDBIso8583Factory();
-		private static final Iso8583MessageFactory TEST_ISO8583_FACTORY = BankFactory.getTestFactory();
+		private static final Iso8583MessageFactory QUICK_START = BankFactory.forQuickStart();
 	}
 
 	private SingletonBankFactory() {
 	}
-
-	public static final Iso8583MessageFactory getCIBIso8583Factory() {
-		return SingletonHolder.CIB_ISO8583_FACTORY;
-	}
-
-	public static final Iso8583MessageFactory getGDBIso8583Factory() {
-		return SingletonHolder.GDB_ISO8583_FACTORY;
-	}
 	
-	public static final Iso8583MessageFactory getTestIso8583Factory() {
-		return SingletonHolder.TEST_ISO8583_FACTORY;
+	/**
+	 * quick start
+	 * @Title: getCIBIso8583Factory
+	 * @Description: quick start
+	 * @return Iso8583MessageFactory
+	 * @author Ajsgn@foxmail.com
+	 * @date 2017年8月3日 下午4:32:18
+	 */
+	public static final Iso8583MessageFactory forQuickStart() {
+		return SingletonHolder.QUICK_START;
 	}
+
 
 }

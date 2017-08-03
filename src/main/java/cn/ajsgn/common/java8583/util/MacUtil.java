@@ -1,4 +1,4 @@
-package cn.ajsgn.test.useless.util;
+package cn.ajsgn.common.java8583.util;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Random;

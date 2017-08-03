@@ -54,7 +54,7 @@ public final class Iso8583Field implements Comparable<Iso8583Field>{
 	 * @Title: getIndex
 	 * @Description: 获取当前字段索引
 	 * @return int 当前字段索引
-	 * @author g.yang@i-vpoints.com
+	 * @author Ajsgn@foxmail.com
 	 * @date 2017年7月25日 上午11:45:09
 	 */
 	public int getIndex() {
@@ -66,7 +66,7 @@ public final class Iso8583Field implements Comparable<Iso8583Field>{
 	 * @Title: getValue
 	 * @Description: 获取当前字段值
 	 * @return String 当前字段值
-	 * @author g.yang@i-vpoints.com
+	 * @author Ajsgn@foxmail.com
 	 * @date 2017年7月25日 上午11:45:49
 	 */
 	public String getValue() {
@@ -78,7 +78,7 @@ public final class Iso8583Field implements Comparable<Iso8583Field>{
 	 * @Title: getFieldType
 	 * @Description: 获取当前字段类型
 	 * @return Iso8583FieldType 当前字段类型
-	 * @author g.yang@i-vpoints.com
+	 * @author Ajsgn@foxmail.com
 	 * @date 2017年7月25日 上午11:46:17
 	 */
 	public Iso8583FieldType getFieldType() {
