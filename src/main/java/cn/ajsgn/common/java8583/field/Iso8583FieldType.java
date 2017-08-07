@@ -19,7 +19,7 @@ package cn.ajsgn.common.java8583.field;
  * <p>字段类型抽象</p>
  * <p>如果字段类型为 NUMERIC，LLVAR_NUMERIC，LLLVAR_NUMERIC，LLLLVAR_NUMERIC类型，因为使用的是BCD编码。所以，当数据长度为奇数时，会触发使用补位策略进行填充。</p>
  * <p>默认使用策略：左对齐，右补‘0’，长度计算不包含填充位。</p>
- * <p>如果希望改变填充策略，则可以通过调用 setFillBlankStrategy({@link FillBlankStrategy} fillBlankStrategy) 来完成策略的修改</p>
+ * <p>如果希望改变填充策略，则可以通过调用 setFillBlankStrategy({@link Iso8583FillBlankStrategy} fillBlankStrategy) 来完成策略的修改</p>
  * @ClassName: Iso8583FieldType
  * @Description: 字段类型抽象
  * @author Ajsgn@foxmail.com
@@ -44,7 +44,7 @@ public class Iso8583FieldType {
 	 * <p>字段填充策略</p>
 	 * <p>默认使用策略：左对齐，右补‘0’，长度计算不包含填充位。</p>
 	 */
-	private FillBlankStrategy fillBlankStrategy = null;
+	private Iso8583FillBlankStrategy fillBlankStrategy = null;
 	
 	/**
 	 * <p>构造函数</p>
@@ -94,7 +94,7 @@ public class Iso8583FieldType {
 	 * @author Ajsgn@foxmail.com
 	 * @date 2017年3月24日 上午10:49:21
 	 */
-	public FillBlankStrategy getFillBlankStrategy() {
+	public Iso8583FillBlankStrategy getFillBlankStrategy() {
 		//当需要获取策略信息时，检查是否有做设置，如果没有相关策略，则使用一个默认策略
 		fillBlankStrategyCheck();
 		return fillBlankStrategy;
@@ -110,7 +110,7 @@ public class Iso8583FieldType {
 	 * @author Ajsgn@foxmail.com
 	 * @date 2017年3月27日 上午10:02:57
 	 */
-	public Iso8583FieldType setFillBlankStrategy(FillBlankStrategy fillBlankStrategy) {
+	public Iso8583FieldType setFillBlankStrategy(Iso8583FillBlankStrategy fillBlankStrategy) {
 		// 如果设置的策略为null则判断当前是否已经有设置填补策略，没有的话则使用一个默认策略，如果有，则放弃操作
 		if(null == fillBlankStrategy)
 			fillBlankStrategyCheck();
@@ -128,7 +128,7 @@ public class Iso8583FieldType {
 	 */
 	private void fillBlankStrategyCheck(){
 		if(null == this.fillBlankStrategy)
-			this.fillBlankStrategy = FillBlankStrategy.rightAppendStrategy('0', false);
+			this.fillBlankStrategy = Iso8583FillBlankStrategy.rightAppendStrategy('0', false);
 	}
 
 	public String getFieldIndex() {

@@ -26,7 +26,7 @@ import java.util.TreeMap;
 import cn.ajsgn.common.java8583.constant.Iso8583ConstantValue;
 import cn.ajsgn.common.java8583.field.Iso8583DataHeader;
 import cn.ajsgn.common.java8583.field.Iso8583FieldType;
-import cn.ajsgn.common.java8583.special.SpecialFieldHandler;
+import cn.ajsgn.common.java8583.special.SpecialField;
 import cn.ajsgn.common.java8583.util.EncodeUtil;
 
 /**
@@ -67,7 +67,7 @@ public class Iso8583MessageFactory {
 	 * <p>用于保存需要特殊处理的字段的值</p>
 	 * <p>特殊字段处理策略集合</p>
 	 */
-	private Map<String,SpecialFieldHandler> specialFieldHandlerMap = new HashMap<String,SpecialFieldHandler>();
+	private Map<String,SpecialField> specialFieldHandlerMap = new HashMap<String,SpecialField>();
 
 	/**
 	 * <p>构造函数</p>
@@ -75,10 +75,11 @@ public class Iso8583MessageFactory {
 	 * @param bit128： 是否使用128域的8583报文规范。默认为false，使用64位域规范
 	 * @param charset： ASCII编码字段的编码类型
 	 */
-	public Iso8583MessageFactory(int msgLength,boolean bit128,Charset charset){
+	public Iso8583MessageFactory(int msgLength,boolean bit128,Charset charset,Iso8583DataHeader header){
 		this.msgLength = msgLength;
 		this.bit128 = bit128;
 		this.charset = charset;
+		setDataHeader(header);
 	}
 	
 	/**
@@ -90,7 +91,7 @@ public class Iso8583MessageFactory {
 	 * @author Ajsgn@foxmail.com
 	 * @date 2017年3月23日 下午1:08:56
 	 */
-	public Iso8583MessageFactory setDataHeader(Iso8583DataHeader header){
+	private Iso8583MessageFactory setDataHeader(Iso8583DataHeader header){
 		//设置tpdu的消息格式
 		this.setTpduType(header.getTpduType());
 		//设置header的消息格式
@@ -226,7 +227,6 @@ public class Iso8583MessageFactory {
 	 */
 	public Iso8583Message parseWithoutMsgLength(byte[] data){
 		//创建一个新的Iso8583Message对象
-		System.out.println(EncodeUtil.hex(data));
 		Iso8583Message message = new Iso8583Message(this);
 		ByteArrayInputStream destIs = new ByteArrayInputStream(data);
 		try {
@@ -297,7 +297,7 @@ public class Iso8583MessageFactory {
 	 */
 	private String parseWithMti(InputStream is,Iso8583FieldType fieldType,String mti) throws IOException{
 		String result = "";
-		SpecialFieldHandler fieldHandler = specialFieldHandlerMap.get(fieldType.getFieldIndex());
+		SpecialField fieldHandler = specialFieldHandlerMap.get(fieldType.getFieldIndex());
 		//空值校验
 		if(null != fieldHandler){
 			Iso8583FieldType newType = new Iso8583FieldType(fieldHandler.forGetBytes(fieldType, mti),fieldType.getFieldLength());
@@ -434,7 +434,7 @@ public class Iso8583MessageFactory {
 		//判断是否表示读取字节长度 
 		//byteLength == true 则读取byteLength个字节内容
 		//byteLength != true 则读取byteLength/2个字节内容
-		int length = byteLength?(Integer.parseInt(EncodeUtil.hex(bLength), 10)+1) / 1 : Integer.parseInt(EncodeUtil.hex(bLength), 10);
+		int length = byteLength?(Integer.parseInt(EncodeUtil.hex(bLength), 10)+1) / 2 : Integer.parseInt(EncodeUtil.hex(bLength), 10);
 		return fixedLengthRead(is,length);
 	}
 	
@@ -577,7 +577,7 @@ public class Iso8583MessageFactory {
 	 * @author Ajsgn@foxmail.com
 	 * @date 2017年6月29日 下午4:05:56
 	 */
-	public Iso8583MessageFactory setSpecialFieldHandle(int index,SpecialFieldHandler specialFieldHandle){
+	public Iso8583MessageFactory setSpecialFieldHandle(int index,SpecialField specialFieldHandle){
 		if(index>1 && index<129){
 			specialFieldHandlerMap.put(String.valueOf(index), specialFieldHandle);
 		}
@@ -593,8 +593,8 @@ public class Iso8583MessageFactory {
 	 * @author Ajsgn@foxmail.com
 	 * @date 2017年6月29日 下午4:07:38
 	 */
-	public SpecialFieldHandler getSpecialFieldHandler(String index){
-		SpecialFieldHandler handle = specialFieldHandlerMap.get(String.valueOf(index));
+	public SpecialField getSpecialFieldHandler(String index){
+		SpecialField handle = specialFieldHandlerMap.get(String.valueOf(index));
 		return handle;
 	}
 	

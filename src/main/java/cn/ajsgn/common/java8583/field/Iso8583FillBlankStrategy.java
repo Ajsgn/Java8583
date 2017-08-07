@@ -23,7 +23,7 @@ package cn.ajsgn.common.java8583.field;
  * @author Ajsgn@foxmail.com
  * @date 2017年3月27日 上午10:06:01
  */
-public class FillBlankStrategy {
+public class Iso8583FillBlankStrategy {
 	/**
 	 * <p>启用左补位操作（即报文信息右对齐）?</p>
 	 */
@@ -43,7 +43,7 @@ public class FillBlankStrategy {
 	 * @param value 填充字符
 	 * @param lengthWithBlank 长度值计算是否包含填充内容
 	 */
-	private FillBlankStrategy(boolean leftAppend,char value,boolean lengthWithBlank){
+	private Iso8583FillBlankStrategy(boolean leftAppend,char value,boolean lengthWithBlank){
 		this.leftAppend = leftAppend;
 		this.value = value;
 		this.lengthWithBlank = lengthWithBlank;
@@ -59,8 +59,8 @@ public class FillBlankStrategy {
 	 * @author Ajsgn@foxmail.com
 	 * @date 2017年3月27日 上午10:09:51
 	 */
-	public static FillBlankStrategy leftAppendStrategy(char value,boolean lengthWithBlank){
-		return new FillBlankStrategy(true,value,lengthWithBlank);
+	public static Iso8583FillBlankStrategy leftAppendStrategy(char value,boolean lengthWithBlank){
+		return new Iso8583FillBlankStrategy(true,value,lengthWithBlank);
 	}
 	
 	/**
@@ -73,8 +73,8 @@ public class FillBlankStrategy {
 	 * @author Ajsgn@foxmail.com
 	 * @date 2017年3月27日 上午10:13:10
 	 */
-	public static FillBlankStrategy rightAppendStrategy(char value,boolean lengthWithBlank){
-		return new FillBlankStrategy(false,value,lengthWithBlank);
+	public static Iso8583FillBlankStrategy rightAppendStrategy(char value,boolean lengthWithBlank){
+		return new Iso8583FillBlankStrategy(false,value,lengthWithBlank);
 	}
 	
 	/**

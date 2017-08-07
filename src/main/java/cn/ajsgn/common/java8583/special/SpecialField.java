@@ -27,7 +27,7 @@ import cn.ajsgn.common.java8583.field.Iso8583FieldType;
  * @author Ajsgn@foxmail.com
  * @date 2017年6月29日 下午3:45:26
  */
-public interface SpecialFieldHandler {
+public interface SpecialField {
 	
 	/**
 	 * <p>做parse()解析报文时的特殊处理</p>

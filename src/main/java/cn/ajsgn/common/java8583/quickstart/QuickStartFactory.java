@@ -18,7 +18,7 @@ package cn.ajsgn.common.java8583.quickstart;
 import java.nio.charset.Charset;
 
 import cn.ajsgn.common.java8583.core.Iso8583MessageFactory;
-import cn.ajsgn.common.java8583.field.FillBlankStrategy;
+import cn.ajsgn.common.java8583.field.Iso8583FillBlankStrategy;
 import cn.ajsgn.common.java8583.field.Iso8583DataHeader;
 import cn.ajsgn.common.java8583.field.Iso8583FieldType;
 
@@ -30,7 +30,7 @@ import cn.ajsgn.common.java8583.field.Iso8583FieldType;
  * @author Ajsgn@foxmail.com
  * @date 2017年3月24日 上午10:52:38
  */
-class BankFactory {
+class QuickStartFactory {
 	
 	/**
 	 * 供熟悉框架使用的factory
@@ -41,14 +41,13 @@ class BankFactory {
 	 * @date 2017年8月3日 下午4:30:29
 	 */
 	public static Iso8583MessageFactory forQuickStart(){
-		Iso8583MessageFactory factory = new Iso8583MessageFactory(2,false,Charset.forName("GBK"));
 		Iso8583DataHeader dataHeaderType = new Iso8583DataHeader(
 				new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.NUMERIC,5),
 				new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.NUMERIC,6),
 				new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.NUMERIC,2),
 				new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.NUMERIC,8));
-		factory.setDataHeader(dataHeaderType)
-			   .set( 2, new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.LLVAR_NUMERIC,0).setFillBlankStrategy(FillBlankStrategy.rightAppendStrategy('F', false)))
+		Iso8583MessageFactory factory = new Iso8583MessageFactory(2,false,Charset.forName("GBK"),dataHeaderType);
+		factory.set( 2, new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.LLVAR_NUMERIC,0).setFillBlankStrategy(Iso8583FillBlankStrategy.rightAppendStrategy('F', false)))
 			   .set( 3, new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.NUMERIC,3))
 			   .set( 4, new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.NUMERIC,6))
 			   .set(11, new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.NUMERIC,3))
@@ -56,13 +55,13 @@ class BankFactory {
 			   .set(13, new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.NUMERIC,2))
 			   .set(14, new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.NUMERIC,2))
 			   .set(15, new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.NUMERIC,2))
-			   .set(22, new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.NUMERIC,2).setFillBlankStrategy(FillBlankStrategy.rightAppendStrategy('0', false)))
+			   .set(22, new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.NUMERIC,2).setFillBlankStrategy(Iso8583FillBlankStrategy.rightAppendStrategy('0', false)))
 			   .set(23, new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.NUMERIC,2))
 			   .set(25, new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.NUMERIC,1))
 			   .set(26, new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.NUMERIC,1))
-			   .set(32, new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.LLVAR_NUMERIC,0).setFillBlankStrategy(FillBlankStrategy.rightAppendStrategy('F', false)))
-			   .set(35, new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.LLVAR_NUMERIC,0).setFillBlankStrategy(FillBlankStrategy.rightAppendStrategy('F', false)))
-			   .set(36, new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.LLLVAR_NUMERIC,0).setFillBlankStrategy(FillBlankStrategy.rightAppendStrategy('F', false)))
+			   .set(32, new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.LLVAR_NUMERIC,0).setFillBlankStrategy(Iso8583FillBlankStrategy.rightAppendStrategy('F', false)))
+			   .set(35, new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.LLVAR_NUMERIC,0).setFillBlankStrategy(Iso8583FillBlankStrategy.rightAppendStrategy('F', false)))
+			   .set(36, new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.LLLVAR_NUMERIC,0).setFillBlankStrategy(Iso8583FillBlankStrategy.rightAppendStrategy('F', false)))
 			   .set(37, new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.CHAR,12))
 			   .set(38, new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.CHAR,6))
 			   .set(39, new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.CHAR,2))
@@ -77,8 +76,8 @@ class BankFactory {
 			   .set(54, new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.LLLVAR,0))
 			   .set(55, new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.LLLVAR,0))
 			   .set(58, new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.LLLVAR,0))
-			   .set(60, new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.LLLVAR_NUMERIC,0).setFillBlankStrategy(FillBlankStrategy.rightAppendStrategy('F', false)))
-			   .set(61, new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.LLLVAR_NUMERIC,0).setFillBlankStrategy(FillBlankStrategy.rightAppendStrategy('F', false)))
+			   .set(60, new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.LLLVAR_NUMERIC,0))
+			   .set(61, new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.LLLVAR_NUMERIC,0).setFillBlankStrategy(Iso8583FillBlankStrategy.rightAppendStrategy('F', false)))
 			   .set(62, new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.LLLVAR,0))
 			   .set(63, new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.LLLVAR,0))
 			   .set(64, new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.NUMERIC,8));

@@ -24,7 +24,7 @@ import cn.ajsgn.common.java8583.core.Iso8583MessageFactory;
  * @author Ajsgn@foxmail.com
  * @date 2017年8月3日 下午4:31:17
  */
-public class SingletonBankFactory {
+public class SingletonFactory {
 	
 	/**
 	 * 对象持有
@@ -34,10 +34,10 @@ public class SingletonBankFactory {
 	 * @date 2017年8月3日 下午4:31:57
 	 */
 	private static class SingletonHolder {
-		private static final Iso8583MessageFactory QUICK_START = BankFactory.forQuickStart();
+		private static final Iso8583MessageFactory QUICK_START = QuickStartFactory.forQuickStart();
 	}
 
-	private SingletonBankFactory() {
+	private SingletonFactory() {
 	}
 	
 	/**

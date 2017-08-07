@@ -21,10 +21,10 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import cn.ajsgn.common.java8583.constant.Iso8583ConstantValue;
-import cn.ajsgn.common.java8583.field.FillBlankStrategy;
+import cn.ajsgn.common.java8583.field.Iso8583FillBlankStrategy;
 import cn.ajsgn.common.java8583.field.Iso8583Field;
 import cn.ajsgn.common.java8583.field.Iso8583FieldType;
-import cn.ajsgn.common.java8583.special.SpecialFieldHandler;
+import cn.ajsgn.common.java8583.special.SpecialField;
 import cn.ajsgn.common.java8583.util.EncodeUtil;
 import cn.ajsgn.common.java8583.util.StringUtil;
 
@@ -249,6 +249,18 @@ public class Iso8583Message {
 	}
 	
 	/**
+	 * 获取当前报文的完整字符串表示形式
+	 * @Title: getBytesString
+	 * @Description: 获取当前报文的完整字符串表示形式
+	 * @return String 完整字符串表示形式
+	 * @author Ajsgn@foxmail.com
+	 * @date 2017年8月3日 下午7:52:01
+	 */
+	public String getBytesString(){
+		return EncodeUtil.hex(getBytes());
+	}
+	
+	/**
 	 * <p>获取用于计算mac的macBlock的字符串表示</p>
 	 * <p>macBlock : mti+bitmap+data(除去校验位的8583报文数据)</p>
 	 * @Title: getMacBlockString
@@ -380,7 +392,7 @@ public class Iso8583Message {
 		byte[] result = new byte[0];
 		if(null != value){
 			//取当前字段对应的特殊处理器
-			SpecialFieldHandler fieldHandle = this.factory.getSpecialFieldHandler(type.getFieldIndex());
+			SpecialField fieldHandle = this.factory.getSpecialFieldHandler(type.getFieldIndex());
 			if(null != fieldHandle){
 				Iso8583FieldType newType = new Iso8583FieldType(fieldHandle.forGetBytes(type, getMti()),type.getFieldLength());
 				newType.setFieldIndex(type.getFieldIndex());
@@ -394,7 +406,7 @@ public class Iso8583Message {
 					if(value.length() > type.getFieldLength()){
 						value = value.substring(0, type.getFieldLength());
 					}
-					result = value.getBytes();
+					result = value.getBytes(this.factory.getCharset());
 					break;
 				}
 				case BINARY:{
@@ -493,8 +505,10 @@ public class Iso8583Message {
 	 * @date 2017年3月27日 上午11:59:02
 	 */
 	private String getFieldValue(String value,Iso8583FieldType type,boolean filledValue){
-		if(Iso8583FieldType.FieldTypeValue.LLVAR_NUMERIC == type.getFieldTypeValue() || Iso8583FieldType.FieldTypeValue.LLLVAR_NUMERIC == type.getFieldTypeValue()){
-			FillBlankStrategy fillBlankStrategy = type.getFillBlankStrategy();
+		if(Iso8583FieldType.FieldTypeValue.LLVAR_NUMERIC == type.getFieldTypeValue() 
+			|| Iso8583FieldType.FieldTypeValue.LLLVAR_NUMERIC == type.getFieldTypeValue()
+			|| Iso8583FieldType.FieldTypeValue.LLLLVAR_NUMERIC == type.getFieldTypeValue()){
+			Iso8583FillBlankStrategy fillBlankStrategy = type.getFillBlankStrategy();
 			//用于填充的填充字符
 			String fillChar = String.valueOf(fillBlankStrategy.getValue());
 			//获取补齐结果与非补齐结果报文内容
@@ -601,6 +615,25 @@ public class Iso8583Message {
 	public Iso8583Message setMti(String mti) {
 		this.mti = mti;
 		return this;
+	}
+	
+	/**
+	 * 比较两个Iso8583Message对象是否一样
+	 * @Title: compareWith
+	 * @Description: 比较两个Iso8583Message对象是否一样
+	 * @param message 目标对象
+	 * @return boolean 比较结果
+	 * @author Ajsgn@foxmail.com
+	 * @date 2017年8月3日 下午7:58:54
+	 */
+	public boolean compareWith(Iso8583Message message){
+		if(null == message){
+			return false;
+		}
+		if (this == message) {
+            return true;
+        }
+		return this.getBytesString().equals(message.getBytesString());
 	}
 	
 }

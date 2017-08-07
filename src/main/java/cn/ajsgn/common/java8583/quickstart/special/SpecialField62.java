@@ -17,7 +17,7 @@ package cn.ajsgn.common.java8583.quickstart.special;
 
 import cn.ajsgn.common.java8583.field.Iso8583FieldType;
 import cn.ajsgn.common.java8583.field.Iso8583FieldType.FieldTypeValue;
-import cn.ajsgn.common.java8583.special.SpecialFieldHandler;
+import cn.ajsgn.common.java8583.special.SpecialField;
 
 /**
  * <p>一个简单的62域特殊处理器</p>
@@ -27,12 +27,12 @@ import cn.ajsgn.common.java8583.special.SpecialFieldHandler;
  * @author Ajsgn@foxmail.com
  * @date 2017年7月25日 下午4:55:10
  */
-public class SpecialField62Handler implements SpecialFieldHandler{
+public class SpecialField62 implements SpecialField{
 
 	@Override
 	public FieldTypeValue forParse(Iso8583FieldType fieldType, String mti) {
 		if("0810".equals(mti)){
-			return Iso8583FieldType.FieldTypeValue.LLLVAR_NUMERIC;
+			return Iso8583FieldType.FieldTypeValue.BINARY;
 		}else{
 			return fieldType.getFieldTypeValue();
 		}
@@ -41,7 +41,7 @@ public class SpecialField62Handler implements SpecialFieldHandler{
 	@Override
 	public FieldTypeValue forGetBytes(Iso8583FieldType fieldType, String mti) {
 		if("0810".equals(mti)){
-			return Iso8583FieldType.FieldTypeValue.LLLVAR_NUMERIC;
+			return Iso8583FieldType.FieldTypeValue.BINARY;
 		}else{
 			return fieldType.getFieldTypeValue();
 		}
