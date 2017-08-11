@@ -149,48 +149,63 @@ public class Iso8583FieldType {
 	 */
 	public static enum FieldTypeValue {
 		/**
-		 * <p>数值型数据</p>
+		 * <p>使用字符长度来描述BCD编码长度</p>
 		 * <p>使用BCD编码方式进行编码处理</p>
 		 */
 		NUMERIC,
 		/**
-		 * <p>二进制数据</p>
-		 * <p>使用BCD编码方式进行编码处理</p>
+		 * <p>字节长度来描述BCD编码</p>
+		 * <p>使用字节长度来描述BCD编码方式进行编码处理</p>
 		 * <p>暂未实现，用NUMERIC方式替代</p>
 		 */
-		BINARY,
+		BYTE_NUMERIC,
 		/**
 		 * <p>字符类型字段</p>
 		 * 使用ASCII编码方式编码
 		 */
 		CHAR,
 		/**
-		 * <p>2个长度的变长字符类型字段</p>
+		 * <p>1个字节长度表示的变长字段(表示字节长度)</p>
 		 * <p>使用ASCII编码方式编码</p>
 		 */
-		LLVAR,
+		LLVAR_CHAR,
 		/**
-		 * <p>3个长度的变长字符类型字段</p>
+		 * <p>2个字节长度表示的变长字段(表示字节长度)</p>
 		 * <p>使用ASCII编码方式编码</p>
 		 */
-		LLLVAR,
+		LLLVAR_CHAR,
 		/**
-		 * <p>4个长度的变长字符类型字段</p>
+		 * <p>3个字节长度表示的变长字段(表示字节长度)</p>
 		 * <p>使用ASCII编码方式编码</p>
 		 */
-		LLLLVAR,
+		LLLLVAR_CHAR,
 		/**
-		 * <p>2个长度的变长字符类型字段</p>
+		 * <p>1个字节长度表示的变长字段(表示字节长度)</p>
+		 * <p>使用BCD编码方式编码</p>
+		 */
+		LLVAR_BYTE_NUMERIC,
+		/**
+		 * <p>2个字节长度表示的变长字段(表示字节长度)</p>
+		 * <p>使用BCD编码方式编码</p>
+		 */
+		LLLVAR_BYTE_NUMERIC,
+		/**
+		 * <p>3个字节长度表示的变长字段(表示字节长度)</p>
+		 * <p>使用BCD编码方式编码</p>
+		 */
+		LLLLVAR_BYTE_NUMERIC,
+		/**
+		 * <p>3个字节长度表示的变长字段(表示字符长度)</p>
 		 * <p>使用BCD编码方式编码</p>
 		 */
 		LLVAR_NUMERIC,
 		/**
-		 * <p>3个长度的变长字符类型字段</p>
+		 * <p>2个字节长度表示的变长字段(表示字符长度)</p>
 		 * <p>使用BCD编码方式编码</p>
 		 */
 		LLLVAR_NUMERIC,
 		/**
-		 * <p>4个长度的变长字符类型字段</p>
+		 * <p>3个字节长度表示的变长字段(表示字符长度)</p>
 		 * <p>使用BCD编码方式编码</p>
 		 */
 		LLLLVAR_NUMERIC

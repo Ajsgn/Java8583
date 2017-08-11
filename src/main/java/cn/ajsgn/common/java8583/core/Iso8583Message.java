@@ -409,11 +409,7 @@ public class Iso8583Message {
 					result = value.getBytes(this.factory.getCharset());
 					break;
 				}
-				case BINARY:{
-					//TODO 保持16进制格式  --不确定
-					result = EncodeUtil.bcd(value);
-					break;
-				}
+				case BYTE_NUMERIC:
 				case NUMERIC:{
 					if(value.length() > type.getFieldLength() * 2){
 						value = value.substring(0, type.getFieldLength() * 2);
@@ -426,15 +422,15 @@ public class Iso8583Message {
 					result = EncodeUtil.bcd(value);
 					break;
 				}
-				case LLVAR:{
+				case LLVAR_CHAR:{
 					result = variableLengthParse(value,1,true);
 					break;
 				}
-				case LLLVAR:{
+				case LLLVAR_CHAR:{
 					result = variableLengthParse(value,2,true);
 					break;
 				}
-				case LLLLVAR:{
+				case LLLLVAR_CHAR:{
 					result = variableLengthParse(value,3,true);
 					break;
 				}
@@ -448,6 +444,18 @@ public class Iso8583Message {
 				}
 				case LLLLVAR_NUMERIC:{
 					result = numericVariableLengthParse(value,3,false,type);
+					break;
+				}
+				case LLVAR_BYTE_NUMERIC:{
+					result = numericVariableLengthParse(value,1,true,type);
+					break;
+				}
+				case LLLVAR_BYTE_NUMERIC:{
+					result = numericVariableLengthParse(value,2,true,type);
+					break;
+				}
+				case LLLLVAR_BYTE_NUMERIC:{
+					result = numericVariableLengthParse(value,3,true,type);
 					break;
 				}
 				default:{
@@ -464,14 +472,14 @@ public class Iso8583Message {
 	 * @Description: 针对LLVAR,LLLVAR,LLLLVAR的变长字段解析为byte[]
 	 * @param value 当前字段的值
 	 * @param dataLength 消息长度
-	 * @param byteLength 是否为字节长度
+	 * @param isByteLength 是否为字节长度
 	 * @author Ajsgn@foxmail.com
 	 * @date 2017年3月24日 上午11:58:34
 	 */
-	private byte[] variableLengthParse(String value,int dataLength,boolean byteLength){
+	private byte[] variableLengthParse(String value,int dataLength,boolean isByteLength){
 		//长度填充
 		String fieldLength = StringUtil.repeat("00", dataLength) + value.getBytes(this.factory.getCharset()).length;
-		return variableLengthParse(value,fieldLength,dataLength,byteLength);
+		return variableLengthParse(value,fieldLength,dataLength,isByteLength,false);
 	}
 	
 	/**
@@ -481,16 +489,17 @@ public class Iso8583Message {
 	 * @Description: 针对LLVAR_NUMERIC,LLLVAR_NUMERIC的变长字段解析为byte[]
 	 * @param value 原报文内容（不区分是否包含填充位内容）
 	 * @param dataLength 消息长度
-	 * @param byteLength 是否为字节长度
+	 * @param isByteLength 是否为字节长度
 	 * @param fillBlankStrategy 填充策略
 	 * @return byte[]
 	 * @author Ajsgn@foxmail.com
 	 * @date 2017年3月27日 上午11:42:01
 	 */
-	private byte[] numericVariableLengthParse(String value,int dataLength,boolean byteLength,Iso8583FieldType type){
-		String fieldLength = StringUtil.repeat("00", dataLength) + (type.getFillBlankStrategy().isLengthWithBlank() ? getFieldValue(value,type,true).length() : getFieldValue(value,type,false).length());
+	private byte[] numericVariableLengthParse(String value,int dataLength,boolean isByteLength,Iso8583FieldType type){
+		int length = (type.getFillBlankStrategy().isLengthWithBlank() ? getFieldValue(value,type,true).length() : getFieldValue(value,type,false).length());
+		String fieldLength = StringUtil.repeat("00", dataLength) + (isByteLength ? (length + length % 2) / 2 : length);
 		value = getFieldValue(value, type, true);
-		return variableLengthParse(value,fieldLength,dataLength,byteLength);
+		return variableLengthParse(value,fieldLength,dataLength,isByteLength,true);
 	}
 	
 	/**
@@ -499,7 +508,7 @@ public class Iso8583Message {
 	 * @Description: 获取某一个字段值的填充/不填充结果
 	 * @param value 原报文内容
 	 * @param type 当前字段对应的字段类型
-	 * @param filledValue 读取填充值：true，读取有填充的内容，false，读取未填充的值
+	 * @param filledValue 读取填充值：true，读取有填充的内容，false，读取没有填充的值
 	 * @return String 报文对应的内容
 	 * @author Ajsgn@foxmail.com
 	 * @date 2017年3月27日 上午11:59:02
@@ -507,7 +516,11 @@ public class Iso8583Message {
 	private String getFieldValue(String value,Iso8583FieldType type,boolean filledValue){
 		if(Iso8583FieldType.FieldTypeValue.LLVAR_NUMERIC == type.getFieldTypeValue() 
 			|| Iso8583FieldType.FieldTypeValue.LLLVAR_NUMERIC == type.getFieldTypeValue()
-			|| Iso8583FieldType.FieldTypeValue.LLLLVAR_NUMERIC == type.getFieldTypeValue()){
+			|| Iso8583FieldType.FieldTypeValue.LLLLVAR_NUMERIC == type.getFieldTypeValue()
+			|| Iso8583FieldType.FieldTypeValue.LLVAR_BYTE_NUMERIC == type.getFieldTypeValue()
+			|| Iso8583FieldType.FieldTypeValue.LLLVAR_BYTE_NUMERIC == type.getFieldTypeValue()
+			|| Iso8583FieldType.FieldTypeValue.LLLLVAR_BYTE_NUMERIC == type.getFieldTypeValue()
+			){
 			Iso8583FillBlankStrategy fillBlankStrategy = type.getFillBlankStrategy();
 			//用于填充的填充字符
 			String fillChar = String.valueOf(fillBlankStrategy.getValue());
@@ -558,16 +571,16 @@ public class Iso8583Message {
 	 * @param value 参与拼接的报文内容体
 	 * @param fieldLength 经过计算之后的hex(长度值)
 	 * @param dataLength 报文长度位的字节长度
-	 * @param byteLength 报文体长度是否为字节长度
+	 * @param isByteLength 报文体长度是否为字节长度
 	 * @return byte[]
 	 * @author Ajsgn@foxmail.com
 	 * @date 2017年3月27日 上午11:38:32
 	 */
-	private byte[] variableLengthParse(String value,String fieldLength,int dataLength,boolean byteLength){
+	private byte[] variableLengthParse(String value,String fieldLength,int dataLength,boolean isByteLength,boolean isNumeric){
 		//计算bcd长度位
 		byte[] bLength = EncodeUtil.bcd(fieldLength.substring(fieldLength.length()-dataLength*2));
 		//获取报文的字节数组
-		byte[] bContent = byteLength?value.getBytes(this.factory.getCharset()):EncodeUtil.bcd(value);
+		byte[] bContent = isByteLength ? (isNumeric ? EncodeUtil.bcd(value) : value.getBytes(this.factory.getCharset())):EncodeUtil.bcd(value);
 		//数据拼接 length+data
 		byte[] content = new byte[bLength.length+bContent.length];
 		System.arraycopy(bLength, 0, content, 0, bLength.length);

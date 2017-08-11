@@ -42,37 +42,6 @@ public class QuickStart {
 	//某发卡方的签到响应请求报文
 	public static final String MTI0810 = "007960000000006022000000000810003800010AC0001400017210014105100803099988303531303030303030323033303035303038303030313330393331303038333938353030380011000000420030004051DBA323AF60599287F61C7E5A9484AEEF8DE29BD3E614FCB51122D4E9B84E2A608CD9C2A4DAABF2";
 	
-	public static void main2(String[] args) {
-		Iso8583MessageFactory factory = SingletonFactory.forQuickStart();
-		factory.setSpecialFieldHandle(62, new SpecialField62());
-
-		Iso8583Message message = new Iso8583Message(factory);
-		message.setTpdu("1234567890");
-		message.setHeader("123456789012");
-		message.setMti("0810");
-		message.setValue(62, "51DBA323AF60599287F61C7E5A9484AEEF8DE29BD3E614FCB51122D4E9B84E2A608CD9C2A4DAABF2");
-		System.out.println(message.getBytesString());
-		
-	}
-	
-	public static void main(String[] args) {
-		Iso8583MessageFactory factory = SingletonFactory.forQuickStart();
-		factory.setSpecialFieldHandle(62, new SpecialField62());
-		Iso8583Message message = factory.parse(MTI0810);
-		System.out.println(message.toFormatString());
-	}
-	
-	public static void main3(String[] args) {
-		Iso8583MessageFactory factory = chapter3();
-		Iso8583Message message = new Iso8583Message(factory);
-		message.setTpdu("0000000000")
-		   .setHeader("111111111111")
-		   .setMti("0200")
-		   .setValue(4, "123451234")
-		   .setValue(9, "123451234");
-		System.out.println(message.toBytesString());
-	}
-	
 	/**
 	 * 快速上手指南 —— 入口
 	 * 看完下面这个main方法，你将可以完全掌握Java8583
@@ -81,43 +50,67 @@ public class QuickStart {
 	 * @author g.yang@i-vpoints.com
 	 * @date 2017年8月3日 下午8:43:02
 	 */
-	public static void main1(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception {
 		//第一章，初识Java8583
 		chapter1();
 		//第二章，认识ISO8583报文结构与Iso8583DataHeader类
 		chapter2();
 		//第三章，认识Iso8583MessageFactory以及填充策略Iso8583FillBlankStrategy
-		chapter3();
+//		chapter3();
 		//第四章，认识Iso8583Message
-		chapter4();
+//		chapter4();
 		//第五章，再识Iso8583MessageFactory——报文解析
-		chapter5();
+//		chapter5();
 		//第六章，使用不同的字符编码导致的中文乱码问题
-		chapter6();
+//		chapter6();
 		//第七章，Iso8583MessageFactory单例的使用
-		chapter7();
+//		chapter7();
 		//第八章，Java8583的单元测试
-		chapter8();
+//		chapter8();
 	}
 
 	/*
 	 * 认识Java8583中的数据类型：
 	 * 从本意上讲，Java8583是没有数据类型概念。
-	 * 只是简单的从数据编码类型上做区分为：ASCII编码类型与BCD编码类型。
+	 * 只是简单的从数据编码类型与长度描述上做区分为：ASCII编码类型与BCD编码类型；字节长度，字符长度。
 	 * 其中每种编码类型又在分为定长与变长两种类型。
+	 * 
+	 * 字段类型描述：
+	 * CHAR：ASCII编码，1个字符占用1个字节，
+	 * LLVAR_CHAR：1个字节描述长度（字节长度），ASCII编码
+	 * LLLVAR_CHAR：2个字节描述长度（字节长度），ASCII编码
+	 * LLLLVAR_CHAR：3个字节描述长度（字节长度），ASCII编码
+	 * 
+	 * NUMERIC：BCD编码，2个字符占用1个字节
+	 * LLVAR_NUMERIC：1个字节描述长度（字符长度），BCD编码
+	 * LLLVAR_NUMERIC：2个字节描述长度（字符长度），BCD编码
+	 * LLLLVAR_NUMERIC:3个字节描述长度（字符长度），BCD编码
+	 * 
+	 * BYTE_NUMERIC：BCD编码，2个字符占用1个字节
+	 * LLVAR_BYTE_NUMERIC：1个字节描述长度（字节长度），BCD编码
+	 * LLLVAR_BYTE_NUMERIC：2个字节描述长度（字节长度），BCD编码
+	 * LLLLVAR_BYTE_NUMERIC：3个字节描述长度（字节长度），BCD编码
+	 * 
+	 * 如果不懂，继续往下看，后续会展示同一个数据在不同数据类型中的计算结果
 	 */
 	@SuppressWarnings("unused")
 	public static void chapter1() {
 		// ASCII
 		FieldTypeValue character = FieldTypeValue.CHAR;
-		FieldTypeValue llvar = FieldTypeValue.LLVAR;
-		FieldTypeValue lllvar = FieldTypeValue.LLLVAR;
-		FieldTypeValue llllvar = FieldTypeValue.LLLLVAR;
+		FieldTypeValue llvar = FieldTypeValue.LLVAR_CHAR;
+		FieldTypeValue lllvar = FieldTypeValue.LLLVAR_CHAR;
+		FieldTypeValue llllvar = FieldTypeValue.LLLLVAR_CHAR;
 		// BCD
 		FieldTypeValue numeric = FieldTypeValue.NUMERIC;
 		FieldTypeValue llvarNumeric = FieldTypeValue.LLVAR_NUMERIC;
 		FieldTypeValue lllvarNumeric = FieldTypeValue.LLLVAR_NUMERIC;
 		FieldTypeValue llllvarNumeric = FieldTypeValue.LLLLVAR_NUMERIC;
+		// BCD
+		FieldTypeValue byteNumeric = FieldTypeValue.BYTE_NUMERIC;
+		FieldTypeValue llvarByteNumeric = FieldTypeValue.LLVAR_BYTE_NUMERIC;
+		FieldTypeValue lllvarByteNumeric = FieldTypeValue.LLLVAR_BYTE_NUMERIC;
+		FieldTypeValue llllvarByteNumeric = FieldTypeValue.LLLLVAR_BYTE_NUMERIC;
+		
 	}
 	
 	/*
@@ -141,13 +134,13 @@ public class QuickStart {
 		//定义报文头数据格式
 		Iso8583DataHeader header = new Iso8583DataHeader(
 			// tpdu		BCD编码，5个字节（10个数字长度）
-			new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.NUMERIC,5),
+			new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.NUMERIC,10),
 			// header	BCD编码，6个字节长度
-			new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.NUMERIC,6),
+			new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.NUMERIC,12),
 			// mti		BCD编码，2个字节长度
-			new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.NUMERIC,2),
+			new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.NUMERIC,4),
 			// bitmap	BCD编码，8个字节长度
-			new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.NUMERIC,8)
+			new Iso8583FieldType(Iso8583FieldType.FieldTypeValue.NUMERIC,16)
 		);
 		return header;
 	}
@@ -171,19 +164,19 @@ public class QuickStart {
 		Iso8583MessageFactory facotry = new Iso8583MessageFactory(2, false, Charset.forName("UTF-8"),chapter2());
 		facotry
 			   //使用默认填充策略
-			   .set(2, new Iso8583FieldType(FieldTypeValue.NUMERIC, 4))
+			   .set(2, new Iso8583FieldType(FieldTypeValue.NUMERIC, 8))
 			   //使用左对齐，右补A
-			   .set(3, new Iso8583FieldType(FieldTypeValue.NUMERIC, 5).setFillBlankStrategy(Iso8583FillBlankStrategy.rightAppendStrategy('A', false)))
+			   .set(3, new Iso8583FieldType(FieldTypeValue.NUMERIC, 10).setFillBlankStrategy(Iso8583FillBlankStrategy.rightAppendStrategy('A', false)))
 			   //使用右对齐，左补B
 			   .set(4, new Iso8583FieldType(FieldTypeValue.LLVAR_NUMERIC, 0).setFillBlankStrategy(Iso8583FillBlankStrategy.leftAppendStrategy('B', false)))
 			   //使用左对齐，右补X
 			   //超过byte范围的一律表示为FF
-			   .set(5, new Iso8583FieldType(FieldTypeValue.LLLVAR_NUMERIC, 0).setFillBlankStrategy(Iso8583FillBlankStrategy.rightAppendStrategy(' ', true)))
+			   .set(5, new Iso8583FieldType(FieldTypeValue.LLLVAR_NUMERIC, 0).setFillBlankStrategy(Iso8583FillBlankStrategy.rightAppendStrategy('C', true)))
 			   .set(6, new Iso8583FieldType(FieldTypeValue.LLLLVAR_NUMERIC, 0).setFillBlankStrategy(Iso8583FillBlankStrategy.rightAppendStrategy('D', true)))
 			   .set(7, new Iso8583FieldType(FieldTypeValue.CHAR, 4))
-			   .set(8, new Iso8583FieldType(FieldTypeValue.LLVAR, 0))
-			   .set(9, new Iso8583FieldType(FieldTypeValue.LLLVAR, 0))
-			   .set(10, new Iso8583FieldType(FieldTypeValue.LLLLVAR, 0));
+			   .set(8, new Iso8583FieldType(FieldTypeValue.LLVAR_CHAR, 0))
+			   .set(9, new Iso8583FieldType(FieldTypeValue.LLLVAR_CHAR, 0))
+			   .set(10, new Iso8583FieldType(FieldTypeValue.LLLLVAR_CHAR, 0));
 		return facotry;
 	}
 	
@@ -317,19 +310,19 @@ public class QuickStart {
 	 * 
 	 * 
 	 */
-	private static void chapter8() {
+	public static void chapter8() {
 		Iso8583MessageFactory factory = SingletonFactory.forQuickStart();
 		Iso8583Message message0800 = factory.parse(MTI0800);
 		System.out.println(message0800.getBytesString());
 		System.out.println(MTI0800.equals(message0800.getBytesString()));
 		//62字段的特殊处理逻辑
-//		factory.setSpecialFieldHandle(62, new SpecialField62());
-//		
-//		Iso8583Message message0810 = factory.parse(MTI0810);
-//		System.out.println(message0810.toFormatString());
-//		System.out.println(MTI0810);
-//		System.out.println(message0810.getBytesString());
-//		System.out.println(MTI0810.equals(message0810.getBytesString()));
+		factory.setSpecialFieldHandle(62, new SpecialField62());
+		
+		Iso8583Message message0810 = factory.parse(MTI0810);
+		System.out.println(message0810.toFormatString());
+		System.out.println(MTI0810);
+		System.out.println(message0810.getBytesString());
+		System.out.println(MTI0810.equals(message0810.getBytesString()));
 	}
 
 }

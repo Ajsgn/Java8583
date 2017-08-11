@@ -308,7 +308,7 @@ public class Iso8583MessageFactory {
 		}
 		//根据字段类型，进行相应的解析动作
 		switch (fieldType.getFieldTypeValue()) {
-		case BINARY:{
+		case BYTE_NUMERIC:{
 			//定长处理：读取固定字节长度的报文数据
 			byte[] content = fixedLengthRead(is, fieldType.getFieldLength());
 			result = EncodeUtil.hex(content);
@@ -322,44 +322,62 @@ public class Iso8583MessageFactory {
 		}
 		case NUMERIC:{
 			//定长处理：读取固定字节长度的报文数据
-			byte[] content = fixedLengthRead(is, fieldType.getFieldLength());
+			byte[] content = fixedLengthRead(is, (fieldType.getFieldLength()+1)/2);
 			result = EncodeUtil.hex(content);
 			break;
 		}
-		case LLVAR:{
+		case LLVAR_CHAR:{
 			//变长处理：读取指定字节的bcd编码数据做为数据长度，继续往后读
-			byte[] content = variableLengthRead(is,1,false);
+			byte[] content = variableLengthRead(is,1,true);
 			result = new String(content,this.charset);
 			break;
 		}
-		case LLLVAR:{
+		case LLLVAR_CHAR:{
 			//变长处理：读取指定字节的bcd编码数据做为数据长度，继续往后读
-			byte[] content = variableLengthRead(is,2,false);
+			byte[] content = variableLengthRead(is,2,true);
 			result = new String(content,this.charset);
 			break;
 		}
-		case LLLLVAR:{
+		case LLLLVAR_CHAR:{
 			//变长处理：读取指定字节的bcd编码数据做为数据长度，继续往后读
-			byte[] content = variableLengthRead(is,3,false);
+			byte[] content = variableLengthRead(is,3,true);
 			result = new String(content,this.charset);
 			break;
 		}
 		case LLVAR_NUMERIC:{
 			//变长处理：读取指定字节的bcd编码数据做为数据长度，继续往后读
-			byte[] content = variableLengthRead(is,1,true);
+			byte[] content = variableLengthRead(is,1,false);
 			result = EncodeUtil.hex(content);
 			break;
 		}
 		case LLLVAR_NUMERIC:{
 			//变长处理：读取指定字节的bcd编码数据做为数据长度，继续往后读
-			byte[] content = variableLengthRead(is,2,true);
+			byte[] content = variableLengthRead(is,2,false);
 			result = EncodeUtil.hex(content);
 			break;
 		}
 		case LLLLVAR_NUMERIC:{
 			//变长处理：读取指定字节的bcd编码数据做为数据长度，继续往后读
-			byte[] content = variableLengthRead(is,3,true);
+			byte[] content = variableLengthRead(is,3,false);
 			result = EncodeUtil.hex(content);
+			break;
+		}
+		case LLVAR_BYTE_NUMERIC:{
+			//变长处理：读取指定字节的bcd编码数据做为数据长度，继续往后读
+			byte[] content = variableLengthRead(is,1,true);
+			result = EncodeUtil.hex(content);			
+			break;
+		}
+		case LLLVAR_BYTE_NUMERIC:{
+			//变长处理：读取指定字节的bcd编码数据做为数据长度，继续往后读
+			byte[] content = variableLengthRead(is,2,true);
+			result = EncodeUtil.hex(content);			
+			break;
+		}
+		case LLLLVAR_BYTE_NUMERIC:{
+			//变长处理：读取指定字节的bcd编码数据做为数据长度，继续往后读
+			byte[] content = variableLengthRead(is,3,true);
+			result = EncodeUtil.hex(content);			
 			break;
 		}
 		default:
@@ -429,12 +447,14 @@ public class Iso8583MessageFactory {
 	 * @author Ajsgn@foxmail.com
 	 * @date 2017年3月23日 下午6:02:01
 	 */
-	private byte[] variableLengthRead(InputStream is,int dataLength,boolean byteLength) throws IOException{
+	private byte[] variableLengthRead(InputStream is,int dataLength,boolean isByteLength) throws IOException{
 		byte[] bLength = fixedLengthRead(is, dataLength);
 		//判断是否表示读取字节长度 
-		//byteLength == true 则读取byteLength个字节内容
-		//byteLength != true 则读取byteLength/2个字节内容
-		int length = byteLength?(Integer.parseInt(EncodeUtil.hex(bLength), 10)+1) / 2 : Integer.parseInt(EncodeUtil.hex(bLength), 10);
+		//isByteLength == true 则读取byteLength个字节内容
+		//isByteLength != true 则读取(byteLength+1)/2个字节内容
+		int bLenghtInt = Integer.parseInt(EncodeUtil.hex(bLength), 10);
+		//(bLenghtInt + bLenghtInt % 2) / 2 : 如果是奇数，则+1 / 2 ，如果是偶数，则 /2
+		int length = isByteLength ? bLenghtInt: (bLenghtInt + bLenghtInt % 2) / 2;
 		return fixedLengthRead(is,length);
 	}
 	

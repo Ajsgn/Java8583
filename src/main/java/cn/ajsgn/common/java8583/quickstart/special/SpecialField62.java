@@ -28,11 +28,11 @@ import cn.ajsgn.common.java8583.special.SpecialField;
  * @date 2017年7月25日 下午4:55:10
  */
 public class SpecialField62 implements SpecialField{
-
+	
 	@Override
 	public FieldTypeValue forParse(Iso8583FieldType fieldType, String mti) {
 		if("0810".equals(mti)){
-			return Iso8583FieldType.FieldTypeValue.BINARY;
+			return Iso8583FieldType.FieldTypeValue.LLLVAR_BYTE_NUMERIC;
 		}else{
 			return fieldType.getFieldTypeValue();
 		}
@@ -41,7 +41,7 @@ public class SpecialField62 implements SpecialField{
 	@Override
 	public FieldTypeValue forGetBytes(Iso8583FieldType fieldType, String mti) {
 		if("0810".equals(mti)){
-			return Iso8583FieldType.FieldTypeValue.BINARY;
+			return Iso8583FieldType.FieldTypeValue.LLLVAR_BYTE_NUMERIC;
 		}else{
 			return fieldType.getFieldTypeValue();
 		}
