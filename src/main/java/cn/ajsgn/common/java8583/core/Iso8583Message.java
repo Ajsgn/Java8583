@@ -198,18 +198,6 @@ public class Iso8583Message {
 	}
 	
 	/**
-	 * <p>获取当前报文的字符串表现形式</p>
-	 * @Title: toBytesString
-	 * @Description: 获取当前报文的字符串表现形式
-	 * @return String 当前报文的字符串表现形式
-	 * @author Ajsgn@foxmail.com
-	 * @date 2017年7月26日 上午9:07:55
-	 */
-	public String toBytesString(){
-		return EncodeUtil.hex(getBytes());
-	}
-	
-	/**
 	 * <p>解析报文协议，返回字节数组，用于应用间的消息的传输</p>
 	 * @Title: getBytes
 	 * @Description: 解析报文协议，返回字节数组，用于应用间的消息的传输
