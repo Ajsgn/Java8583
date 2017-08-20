@@ -12,10 +12,6 @@ public class EncodeUtil {
 
     protected static final char[] BINARY = new char[]{'0','1'};
 
-    private EncodeUtil(){
-
-    }
-
     //传入参数为只有01的字符串
     public static byte[] binary(String binaryStr){
         //长度不是8倍数的话，无法知道在左边或右边补零，会引起歧义，导致结果不正确
@@ -51,11 +47,6 @@ public class EncodeUtil {
         }
         return accum.toString();
     }
-
-    public static byte[] bcd(int code,int len){
-        return EncodeUtil.bcd(String.valueOf(code),len);
-    }
-
     
     public static String binary(byte[] bts){
     	StringBuffer accum = new StringBuffer();
@@ -77,76 +68,36 @@ public class EncodeUtil {
 		}
 		return new String(arrayOfChar);
     }
-
-    /**
-     * BCD编码(8421码)为一个4位表示一个10进制数，即每个字节表示两个数
-    *本方法中的code为10进制数（本方法支持16进制数编码，每两位编为1字节）
-    */
-    public static byte[] bcd(String code){
-        //控制byte数组的大小
-        int len = code.length()%2==0?code.length()/2:code.length()/2+1;
-        return bcd(code,len);
-    }
     
     /**
-     * BCD编码(8421码)为一个4位表示一个10进制数，即每个字节表示两个数
-    *本方法中的code为10进制数（本方法支持16进制数编码，每两位编为1字节）
-    */
-    public static byte[] bcd2(String code,int len){
-        //控制byte数组的大小
-        return bcd(code,len);
-    }
-    
-
-    /**
-     * @param code
-     * @param length
-     * @return
+     * <p>8421 BCD编码支持</p>
+     * @Title: bcd
+     * @Description: 8421 BCD编码支持
+     * @param data 需要做编码的数据
+     * @return byte[] 编码结果
+     * @author Ajsgn@foxmail.com
+     * @date 2017年8月19日 下午11:54:32
      */
-    public static byte[] bcd(String code,int length){
-        if(length<0){
-            throw new IllegalArgumentException("参数length不能小于0,length:"+length);
-        }else if(length==0){
-            return new byte[0];
-        }
-        byte[] bt = new byte[length];
-        //指示当前位置
-        int point = 0;
-        if(code.length()<2*length){
-        	code = addBlankLeft(code,2*length-code.length(),"0");
-        }
-        
-        //每两位合并为一个字节
-        for(;point<code.length();point+=2){
-            //(point+1)/2计算当前指向的值
-            //Character.digit将对应的Char转为数字，如'8'-> 8
-            //<<4左移四位：即为→_→（右边）的数字让开位置
-            bt[(point+1)/2] = (byte)(Character.digit(code.charAt(point),16)<<4|Character.digit(code.charAt(point+1),16));
-        }
-        return bt;
-    }
-    
-    public static String addBlankLeft(String origStr,int length,String fill){
-    	if(length<=0){
-    		return origStr;
-    	}
-    	StringBuffer accum = new StringBuffer(); 	
-    	for(int i=0;i<length;i++){
-    	 		accum.append(fill);
-    	 	}
-    	accum.append(origStr);
-    	return accum.toString();
-    }
-    
-    public static String addBlankRight(String origStr,int length,String fill){
-    	if(length<=0){
-    		return origStr;
-    	}
-    	StringBuffer accum = new StringBuffer(origStr); 	
-    	for(int i=0;i<length;i++){
-    	 		accum.append(fill);
-    	 	}
-    	return accum.toString();
-    }
-    
+	public static byte[] bcd(String data){
+		//空值校验
+		if(null == data || "".equals(data.trim()))
+			return new byte[0];
+		//去首位空格
+		data = data.trim();
+		//左位补0
+		data = data.length() % 2 == 0 ? data : "0" + data;
+		//结果数据
+		byte[] result = new byte[(data.length() + data.length() % 2) / 2];
+		//依次写入数据
+		for(int pointer=0,index=0;pointer<data.length();pointer++,index++){
+			//左边4bit
+			int left = Character.digit(data.charAt(pointer), 16);
+			//右边4bit
+			int right = Character.digit(data.charAt(++pointer), 16);
+			//获得结果
+			result[index] = (byte)((left << 4) | right);
+		}
+		return result;
+	}
+	
 }

@@ -17,9 +17,16 @@ package cn.ajsgn.common.java8583.test.example;
 
 import java.lang.reflect.Field;
 import java.nio.charset.Charset;
+import java.util.LinkedList;
 
 import cn.ajsgn.common.java8583.core.Iso8583Message;
 import cn.ajsgn.common.java8583.core.Iso8583MessageFactory;
+import cn.ajsgn.common.java8583.ext.tlv.TlvObject;
+import cn.ajsgn.common.java8583.ext.tlv.TlvParser;
+import cn.ajsgn.common.java8583.ext.tlv.TlvValue;
+import cn.ajsgn.common.java8583.ext.tlv.parser.TlvParserFactory;
+import cn.ajsgn.common.java8583.ext.tlv.parser.TlvParserType;
+import cn.ajsgn.common.java8583.ext.tlv.parser.TlvValueFactory;
 import cn.ajsgn.common.java8583.field.Iso8583DataHeader;
 import cn.ajsgn.common.java8583.field.Iso8583FieldType;
 import cn.ajsgn.common.java8583.field.Iso8583FillBlankStrategy;
@@ -69,6 +76,9 @@ public class QuickStart {
 		chapter7();
 		//第八章，Java8583的单元测试
 		chapter8();
+		//第九章，Java8583扩展功能介绍
+		//9.1、TLV字段读取支持，以及55域解析支持
+		chapter9_1();
 	}
 
 	/*
@@ -392,6 +402,45 @@ public class QuickStart {
 		Iso8583Message message0810 = factory.parse(MTI0810);
 		System.out.println(message0810.getBytesString());
 		System.out.println(MTI0810.equals(message0810.getBytesString()));
+	}
+	
+	/*
+	 * tlv-55域使用演示
+	 */
+	public static void chapter9_1() {
+		//一个55域字符串表示
+		//报文解析示例
+		String data = "9F2608AAA4D321391F16849F2701809F10160706A203206E00010DA11111111100001509071900809F3704B983E6289F36020004950500000000009A031605189C01009F02060000000000015F2A020156820200409F1A0201569F03060000000000009F3303E0E9C89F34030000009F3501229F1E0831323320202020208408F0000006660101019F090202009F631031343239333330300020040000000000";
+		TlvParser parser = TlvParserFactory.forTlvParse(TlvParserType.ISO8583_FIELD_55_VERSION5);
+		TlvObject tlvObject = parser.tlvParse(data);
+		System.out.println(tlvObject.get("9F26".toUpperCase()));
+		System.out.println(tlvObject.toLocalString().equals(data));
+		
+		//值更新
+		//因为TlvValue实现对象有包访问限制，所以，使用工厂类创建对象
+		tlvObject.put(TlvValueFactory.field55TlvValueInstance("9F26", "1234567890123456"));
+		System.out.println(tlvObject.toLocalString());
+		
+		//值删除
+		tlvObject.remove(TlvValueFactory.field55TlvValueInstance("9F26", "1234567890123456"));
+		System.out.println(tlvObject.toLocalString());
+		
+		//数据还原
+		tlvObject = parser.tlvParse(data);
+		
+		//报文组装示例
+		LinkedList<TlvValue> result = new LinkedList<TlvValue>();
+		for(TlvValue value : tlvObject.values()){
+			result.add(TlvValueFactory.field55TlvValueInstance(value.getTagName(), value.getTagValue()));
+		}
+		//拼装完成，做toString
+		StringBuilder resultStr = new StringBuilder();
+		for(TlvValue value : result){
+			resultStr.append(value.toLocalString());
+		}
+		System.out.println(resultStr.toString());
+		System.out.println(data.equals(resultStr.toString()));
+		
 	}
 
 }
